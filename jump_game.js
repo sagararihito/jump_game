@@ -1,5 +1,6 @@
 var canvas,g;
 var charaPosX, charaPosY, charaImg;
+var speed, acceleration;
 onload = function(){
     //描画コンテキストの取得
     canvas = document.getElementById("jump_canvas");
@@ -13,31 +14,55 @@ onload = function(){
 };
 
 function init() {
-    charaPosX = 50;
-    charaPosY = 400;
+    charaPosX = 20;
+    charaPosY = 480;
+    speed = 0;
+    acceleration = 0;
     charaImg = new Image();
     charaImg.src = "piyo.png";
 }
 
-function keydown(e){}
+function keydown(e){
+    if(charaPosY==480){
+    speed = -17;
+    acceleration = 0.7;
+}    
+}
 
 function gameloop(){
     update();
     draw();
 }
 
+let vx = 2;
 function update(){
-    charaPosX = charaPosX + 1;
+    charaPosX = charaPosX + vx;
+    if(charaPosX>480){
+        vx=-vx;
+    }
+    if(charaPosX<20){
+        vx=-vx;
+    }
+    speed = speed + acceleration;
+    charaPosY = charaPosY + speed;
+    if(charaPosY>=480){
+        acceleration = 0;
+        speed = 0;
+        charaPosY = 480;
+    }
 }
 
+const scale = 0.06
 function draw(){
     //背景
-    g.fillStyle = "rgb(3,3,3";
-    g.fillRect(0,0,480,480);
+    g.fillStyle = "#84d0b4ff";
+    g.fillRect(0,0,500,500);
     //キャラの描画
     g.drawImage(
         charaImg,
-        charaPosX - charaImg.width / 2,
-        charaPosY - charaImg.height / 2
+        charaPosX - charaImg.width * scale / 2,
+        charaPosY - charaImg.height * scale / 2,
+        charaImg.width * scale,
+        charaImg.height * scale
     );
 }
